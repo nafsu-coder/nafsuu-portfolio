@@ -231,9 +231,9 @@ const projects = [
             "A fictional branding project focused on typography, colors and visual identity.",
 
         images: [
-            "project2.jpg",
-            "project2-2.jpg",
-            "project2-3.jpg"
+            "image/pre.png",
+            "image/logo.png",
+            "image/ig.png"
         ]
     },
 
