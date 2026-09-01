@@ -245,9 +245,9 @@ const projects = [
             "A collection of social media graphics created as a design practice project.",
 
         images: [
-            "project3.jpg",
-            "project3-2.jpg",
-            "project3-3.jpg"
+            "image/project1.jpg",
+            "image/project2.jpg",
+            "image/project3.jpg"
         ]
     }
 
