@@ -143,266 +143,197 @@ if (skillsSection) {
 
     skillsObserver.observe(skillsSection);
 }
-const projectsSection =
-    document.querySelector(".projects");
+/* =========================================
+   SERVICES SECTION
+========================================= */
 
-const projectTitle =
-    document.querySelector(".projects-title");
+const servicesSection =
+    document.querySelector(".services");
 
-const projectCards =
-    document.querySelectorAll(".project-card");
+const serviceElements =
+    document.querySelectorAll(".reveal-service");
 
+const serviceCards =
+    document.querySelectorAll(".service-card");
 
-if (projectsSection) {
 
-    const projectObserver =
-        new IntersectionObserver((entries) => {
+/* =========================================
+   SCROLL REVEAL
+========================================= */
 
-            entries.forEach((entry) => {
+if (servicesSection) {
 
-                if (entry.isIntersecting) {
+    const servicesObserver =
+        new IntersectionObserver(
 
-                    // Title
+            (entries) => {
 
-                    projectTitle.classList.add("active");
+                entries.forEach((entry) => {
 
+                    if (entry.isIntersecting) {
 
-                    // Cards appear one by one
+                        serviceElements.forEach(
+                            (element, index) => {
 
-                    projectCards.forEach((card, index) => {
+                                const delay =
+                                    element.dataset.delay
+                                    || index * 150;
 
-                        setTimeout(() => {
+                                setTimeout(() => {
 
-                            card.classList.add("show");
+                                    element.classList.add("show");
 
-                        }, 300 + index * 350);
+                                }, Number(delay));
 
-                    });
+                            }
+                        );
 
-                } else {
+                    } else {
 
-                    // Reset title
+                        /*
+                         * Remove this if you want the
+                         * animation to happen only once.
+                         */
 
-                    projectTitle.classList.remove("active");
+                        serviceElements.forEach(
+                            (element) => {
 
+                                element.classList.remove("show");
 
-                    // Reset cards
+                            }
+                        );
 
-                    projectCards.forEach((card) => {
+                    }
 
-                        card.classList.remove("show");
+                });
 
-                    });
+            },
 
-                }
+            {
+                threshold: 0.15
+            }
 
-            });
+        );
 
-        }, {
 
-            threshold: 0.25
-
-        });
-
-
-    projectObserver.observe(projectsSection);
-}
-const projects = [
-
-    {
-        title: "Esports Visual Identity",
-        category: "GRAPHIC DESIGN",
-        description:
-            "A practice project exploring esports branding, visual identity and promotional design.",
-
-        images: [
-            "image/LOGO.png",
-            "image/JERSEY.png",
-            "image/WELCOME.png",
-            "image/CHAMPION.png"
-        ]
-    },
-
-
-    {
-        title: "Creative Brand Concept",
-        category: "BRANDING",
-        description:
-            "A fictional branding project focused on typography, colors and visual identity.",
-
-        images: [
-            "image/pre.png",
-            "image/logo.png",
-            "image/ig.png"
-        ]
-    },
-
-
-    {
-        title: "Social Media Campaign",
-        category: "SOCIAL MEDIA",
-        description:
-            "A collection of social media graphics created as a design practice project.",
-
-        images: [
-            "image/project1.png",
-            "image/project2.png",
-            "image/project3.png"
-        ]
-    }
-
-];
-
-
-let currentProject = 0;
-let currentImage = 0;
-
-
-const viewer =
-    document.getElementById("projectViewer");
-
-const viewerImage =
-    document.getElementById("viewerImage");
-
-const viewerTitle =
-    document.getElementById("viewerTitle");
-
-const viewerCategory =
-    document.getElementById("viewerCategory");
-
-const viewerDescription =
-    document.getElementById("viewerDescription");
-
-const imageCounter =
-    document.getElementById("imageCounter");
-
-
-function openProject(projectIndex) {
-
-    currentProject = projectIndex;
-
-    currentImage = 0;
-
-    const project = projects[currentProject];
-
-
-    viewerTitle.textContent =
-        project.title;
-
-    viewerCategory.textContent =
-        project.category;
-
-    viewerDescription.textContent =
-        project.description;
-
-
-    updateImage();
-
-
-    viewer.classList.add("active");
-
-
-    document.body.style.overflow = "hidden";
+    servicesObserver.observe(servicesSection);
 }
 
 
-function closeProject() {
+/* =========================================
+   CARD MOUSE TILT
+========================================= */
 
-    viewer.classList.remove("active");
+serviceCards.forEach((card) => {
 
-    document.body.style.overflow = "";
-}
+    card.addEventListener("mousemove", (event) => {
 
+        const rect =
+            card.getBoundingClientRect();
 
-function updateImage() {
+        const x =
+            event.clientX - rect.left;
 
-    const project =
-        projects[currentProject];
+        const y =
+            event.clientY - rect.top;
 
+        const centerX =
+            rect.width / 2;
 
-    viewerImage.style.opacity = "0";
+        const centerY =
+            rect.height / 2;
 
+        const rotateX =
+            ((y - centerY) / centerY) * -4;
 
-    setTimeout(() => {
+        const rotateY =
+            ((x - centerX) / centerX) * 4;
 
-        viewerImage.src =
-            project.images[currentImage];
+        card.style.transform = `
+            translateY(-10px)
+            perspective(800px)
+            rotateX(${rotateX}deg)
+            rotateY(${rotateY}deg)
+            scale(1.02)
+        `;
 
-        viewerImage.style.opacity = "1";
-
-    }, 150);
-
-
-    imageCounter.textContent =
-        String(currentImage + 1).padStart(2, "0")
-        + " / " +
-        String(project.images.length).padStart(2, "0");
-}
-
-
-function nextImage() {
-
-    const project =
-        projects[currentProject];
-
-
-    currentImage++;
-
-    if (currentImage >= project.images.length) {
-
-        currentImage = 0;
-
-    }
+    });
 
 
-    updateImage();
-}
+    card.addEventListener("mouseleave", () => {
 
+        card.style.transform = "";
 
-function previousImage() {
-
-    const project =
-        projects[currentProject];
-
-
-    currentImage--;
-
-    if (currentImage < 0) {
-
-        currentImage =
-            project.images.length - 1;
-
-    }
-
-
-    updateImage();
-}
-
-
-/* ESC closes viewer */
-
-document.addEventListener("keydown", (event) => {
-
-    if (event.key === "Escape") {
-
-        closeProject();
-
-    }
+    });
 
 });
 
 
-/* Click outside closes viewer */
+/* =========================================
+   CREATE BACKGROUND PARTICLES
+========================================= */
 
-viewer.addEventListener("click", (event) => {
+const particleContainer =
+    document.getElementById("serviceParticles");
 
-    if (event.target === viewer) {
 
-        closeProject();
+if (particleContainer) {
+
+    const particleCount = 35;
+
+    for (let i = 0; i < particleCount; i++) {
+
+        const particle =
+            document.createElement("span");
+
+        particle.classList.add(
+            "service-particle"
+        );
+
+
+        /* Random position */
+
+        particle.style.left =
+            Math.random() * 100 + "%";
+
+        particle.style.top =
+            Math.random() * 100 + "%";
+
+
+        /* Random movement */
+
+        particle.style.setProperty(
+            "--move-x",
+            (Math.random() * 100 - 50) + "px"
+        );
+
+        particle.style.setProperty(
+            "--move-y",
+            (Math.random() * 100 - 50) + "px"
+        );
+
+
+        /* Random animation duration */
+
+        particle.style.setProperty(
+            "--duration",
+            (4 + Math.random() * 6) + "s"
+        );
+
+
+        /* Random delay */
+
+        particle.style.animationDelay =
+            (Math.random() * 5) + "s";
+
+
+        particleContainer.appendChild(
+            particle
+        );
 
     }
 
-});
+}
 const contactSection =
     document.querySelector(".contact");
 
